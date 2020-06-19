@@ -1,6 +1,6 @@
 # Projekt z baz danych 2020
-# Szymon Pielat 3088859
-# Grupa PGar
+## Szymon Pielat 3088859
+## Grupa PGar
 
 
 # Specyfikacja
