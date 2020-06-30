@@ -1,4 +1,4 @@
-CREATE EXTENSION postgis;
+--CREATE EXTENSION postgis;
 ----------------------------------------Wyczysc aktualna baze danych ( DO TESTÓW)----------------------------------------
 DROP TABLE  cyclist cascade;
 DROP TABLE  catalog cascade;
@@ -33,7 +33,6 @@ CREATE TABLE reservation(
     catalog_id integer NOT NULL,
     name_id text NOT NULL,
     start_day date NOT NULL,
-    --end_day date NOT NULL,
     FOREIGN KEY (name_id) REFERENCES cyclist (name),
     FOREIGN KEY (catalog_id) REFERENCES catalog (version)
 );
@@ -58,12 +57,13 @@ CREATE TABLE connection(
 );
 
 
-----------------------------------------funkcje----------------------------------------
+create INDEX on node using Gist (coordinates);
 
+----------------------------------------funkcje----------------------------------------
 ---Liczenie dla danej trasy jej dlugosci
 CREATE OR REPLACE FUNCTION calculate_distance(integer) RETURNS integer AS $$
 DECLARE
-    distance float := 0;
+    distance integer := 0;
     x record;
 BEGIN
     FOR x IN 
@@ -71,24 +71,29 @@ BEGIN
     LOOP
         distance = distance + ST_Distance((SELECT coordinates FROM node WHERE x.exit_node_id = id), (SELECT coordinates FROM node WHERE x.entry_node_id = id));
     END LOOP;
-  RETURN distance;
+  RETURN ROUND(distance);
 END
 $$ LANGUAGE plpgsql; 
 
----Dopisywanie kilometrow i dni rowerzyscie(jezeli jest to nowy rowerzysta dodaje go do bazy)
-CREATE OR REPLACE FUNCTION update_cyclist() RETURNS TRIGGER AS $$
-BEGIN
-    IF OLD.name_id NOT IN (SELECT name FROM cyclist) THEN
-        INSERT INTO cyclist(name,distance_traveled,no_trips) VALUES (OLD.name_id,calculate_distance(OLD.catalog_id), 1);
+---Aktualizacja rowerzysty oraz dodawanie rezerwacji;
+CREATE OR REPLACE FUNCTION add_reservation(Fname text,Fcatalog integer, Fstart_day date) RETURNS VOID AS $$
+BEGIN ---sprawdz czy rowerzysta istnieje
+    IF Fname NOT IN (SELECT name FROM cyclist) THEN 
+        -- nie ma go w bazie czyli go dodaj
+        INSERT INTO cyclist(name,distance_traveled,no_trips) VALUES (Fname,calculate_distance(Fcatalog), 1);
+    ELSE
+        -- jest juz, wiec tylko powieksz mu wynik
+        UPDATE cyclist SET distance_traveled = distance_traveled + calculate_distance(Fcatalog), no_trips=no_trips+1 WHERE name=Fname;
     END IF;
-    RETURN NEW;
+    --Dodaj rezerwacje
+    INSERT INTO reservation(catalog_id,name_id,start_day) VALUES (Fcatalog, Fname, Fstart_day);
 END
 $$ LANGUAGE plpgsql; 
 
+--- Znajdz gosci ktorzy beda spac w danym miejscu danego dnia
+CREATE OR REPLACE FUNCTION find_guest(Fnode integer, Fdate date) RETURNS TABLE (guest text) AS $$
+BEGIN  
+    RETURN QUERY (SELECT DISTINCT reservation.name_id FROM reservation, connection WHERE (connection.node_order)=(Fdate-reservation.start_day) AND exit_node_id=Fnode );
+END
+$$ LANGUAGE plpgsql; 
 
----------------------------------------trigery----------------------------------------
-CREATE TRIGGER cyclist_progress 
-BEFORE INSERT
-    ON reservation
-    FOR EACH STATEMENT
-       EXECUTE PROCEDURE update_cyclist();

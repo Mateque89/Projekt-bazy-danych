@@ -1,0 +1,12 @@
+{'status': 'CONNECTED'}
+{'status': 'OK', 'data': []}
+{'status': 'OK'}
+{'status': 'OK'}
+{'status': 'OK'}
+{'status': 'OK'}
+{'status': 'OK'}
+{'status': 'OK'}
+{'status': 'OK'}
+{'status': 'OK', 'data': [{'node': 12345, 'olat': 51.111044, 'olon': 17.053423, 'distance': 1100}, {'node': 12346, 'olat': 51.198127, 'olon': 16.919484, 'distance': 13045}]}
+{'status': 'OK', 'data': [{'cyclist': 'paweł'}, {'cyclist': 'piotrek'}]}
+{'status': 'OK', 'data': [{'cyclist': 'janek', 'distance': 26958, 'no_trips': 1}, {'cyclist': 'paweł', 'distance': 26958, 'no_trips': 1}]}

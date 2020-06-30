@@ -1,15 +1,17 @@
-
-from eventHandler import *
-import json
+import psycopg2
+from eventHandler import EventHandler
 import sys
+import json
+
 
 
 
 handler = EventHandler()
-while True:
-    inp = input()
-    if input == '':
-        exit()
-    obj = json.loads(inp)
-    handler.Event(obj)
-
+for line in sys.stdin:
+    try:
+        if line == '' or line == '\n':
+            break
+        inp = json.loads(line)
+        handler.Event(inp)
+    except (Exception) as error:
+        print({"status": "ERROR", 'debug':error})
