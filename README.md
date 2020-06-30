@@ -1,7 +1,24 @@
 # Projekt z baz danych 2020
-## Szymon Pielat 3088859
-## Grupa PGar
+* Szymon Pielat 3088859
+* Grupa PGar
 
+## Użytkowanie
+
+### Wymagane
+  Do korzystnia wymagane jest:
+  1. Python
+  2. PostgreSQL
+  3. psycopg2
+  4. PostGis
+
+### Jak używać
+Jak odpalić:
+`py program.py`
+przy pierwszym użyciu odpalić parametrem `--init` w celu zbudowania bazy danych
+
+Przykładowe użycie:<br />
+`{ "open": { "database": "student", "login": "app", "password": "qwerty"}} `
+`{ "function": "closest_nodes", "body": { "ilat": 51.107883, "ilon": 17.038538}} `
 
 # Specyfikacja
 
