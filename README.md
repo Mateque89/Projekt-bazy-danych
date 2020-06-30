@@ -4,6 +4,15 @@
 
 ## Użytkowanie
 
+### Zrealizowane funkcje
+  - [x] Node
+  - [x] Catalog
+  - [x] Trip
+  - [x] Closest_nodes
+  - [ ] Party
+  - [x] Guest
+  - [x] Cyclist
+
 ### Wymagane
   Do korzystnia wymagane jest:
   1. Python
@@ -13,11 +22,11 @@
 
 ### Jak używać
 Jak odpalić:
-`py program.py`
-przy pierwszym użyciu odpalić parametrem `--init` w celu zbudowania bazy danych
+`py program.py`.<br />
+Natomiast przy pierwszym użyciu odpalić z  parametrem `--init` w celu zbudowania bazy danych.
 
 Przykładowe użycie:<br />
-`{ "open": { "database": "student", "login": "app", "password": "qwerty"}} `
+`{ "open": { "database": "student", "login": "app", "password": "qwerty"}} `<br />
 `{ "function": "closest_nodes", "body": { "ilat": 51.107883, "ilon": 17.038538}} `
 
 # Specyfikacja
